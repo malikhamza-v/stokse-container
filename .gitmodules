@@ -1,6 +1,6 @@
-[submodule "pos-victory"]
-	path = pos-victory
-	url = git@github.com:malikhamza-v/pos-victory.git
 [submodule "stokse-server"]
 	path = stokse-server
 	url = git@github.com:malikhamza-v/stokse-server.git
+[submodule "stokse-client"]
+	path = stokse-client
+	url = git@github.com:malikhamza-v/stokse-client.git
