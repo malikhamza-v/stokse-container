@@ -1,0 +1,72 @@
+services:
+  database:
+    image: mysql:8.4.2
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: do_blast_db
+      MYSQL_ALLOW_EMPTY_PASSWORD: true
+
+    volumes:
+      - ./database-bak/do_blast_db:/var/lib/mysql
+
+  nginx:
+    restart: always
+    image: nginx:latest
+    ports:
+      - 80:8080
+      - 8080:8081
+    volumes:
+      - ./nginx/nginx-api-setup.conf:/etc/nginx/conf.d/api.conf
+      - ./nginx/nginx-web-setup.conf:/etc/nginx/conf.d/web.conf
+      - spa_build:/var/www/react
+      - django_media:/var/www/django_media
+      - django_static:/var/www/django_static
+    depends_on:
+      - django
+      - react
+
+  django:
+    build:
+      context: ./e-ticket-service
+    volumes:
+      - ./e-ticket-service:/django
+      - django_media:/django/media
+      - django_static:/django/static
+    ports:
+      - 8000:8000
+    image: django:do_blast_server_api
+    container_name: do_blast_api_container
+    command: gunicorn do_blast_server.asgi:application -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000 --workers 4 --threads 2 --log-level info
+    depends_on:
+      - database
+
+  react:
+    build:
+      context: ./e-ticket-service-spa
+    volumes:
+      - spa_build:/react/dist
+    ports:
+      - 3000:3000
+    image: react:do_blast_server_spa
+    container_name: do_blast_spa_container
+    command: npm run build
+
+  celery:
+    restart: always
+    build:
+      context: ./e-ticket-service
+    command: celery -A do_blast_server worker -l INFO
+    volumes:
+      - ./e-ticket-service:/django
+      - django_media:/django/media
+    container_name: celery_container
+    depends_on:
+      - database
+      - redis
+      - django
+
+volumes:
+  spa_build:
+  django_media:
+  django_static:
