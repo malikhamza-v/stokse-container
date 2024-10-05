@@ -23,7 +23,11 @@ services:
       - django_media:/var/www/django_media
       - spa_build:/var/www/react
       - ./nginx/nginx-api-setup.conf:/etc/nginx/conf.d/api.conf
+      - ./nginx/nginx-api-selfsigned.crt:/etc/ssl/certs/nginx-api-selfsigned.crt
+      - ./nginx/nginx-api-selfsigned.key:/etc/ssl/private/nginx-api-selfsigned.key
       - ./nginx/nginx-web-setup.conf:/etc/nginx/conf.d/web.conf
+      - ./nginx/nginx-web-selfsigned.crt:/etc/ssl/certs/nginx-web-selfsigned.crt
+      - ./nginx/nginx-web-selfsigned.key:/etc/ssl/private/nginx-web-selfsigned.key
     depends_on:
       - django
       - react
