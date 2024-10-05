@@ -1,72 +1,55 @@
 services:
   database:
-    image: mysql:8.4.2
-    ports:
-      - 3306:3306
+    image: postgres
+    container_name: stokse-db
+    restart: always
     environment:
-      MYSQL_DATABASE: do_blast_db
-      MYSQL_ALLOW_EMPTY_PASSWORD: true
-
+      POSTGRES_DB: stokse
+      POSTGRES_USER: stokse_user
+      POSTGRES_PASSWORD: securepassword
     volumes:
-      - ./database-bak/do_blast_db:/var/lib/mysql
+      - stokse_db:/var/lib/postgresql/data
 
   nginx:
+    build:
+      context: ./nginx
     restart: always
-    image: nginx:latest
+    container_name: nginx
     ports:
-      - 80:8080
-      - 8080:8081
+      - 80:80
+      - 8000:8000
     volumes:
+      - django_static:/var/www/django_static
+      - django_media:/var/www/django_media
+      - spa_build:/var/www/react
       - ./nginx/nginx-api-setup.conf:/etc/nginx/conf.d/api.conf
       - ./nginx/nginx-web-setup.conf:/etc/nginx/conf.d/web.conf
-      - spa_build:/var/www/react
-      - django_media:/var/www/django_media
-      - django_static:/var/www/django_static
     depends_on:
       - django
       - react
 
   django:
     build:
-      context: ./e-ticket-service
+      context: ./stokse-server
     volumes:
-      - ./e-ticket-service:/django
-      - django_media:/django/media
+      - ./stokse-server:/django
       - django_static:/django/static
-    ports:
-      - 8000:8000
-    image: django:do_blast_server_api
-    container_name: do_blast_api_container
-    command: gunicorn do_blast_server.asgi:application -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000 --workers 4 --threads 2 --log-level info
+      - django_media:/django/media
+    image: django:stokse_server_api
+    container_name: stokse_server_container
     depends_on:
       - database
 
   react:
     build:
-      context: ./e-ticket-service-spa
+      context: ./stokse-client
     volumes:
-      - spa_build:/react/dist
-    ports:
-      - 3000:3000
-    image: react:do_blast_server_spa
-    container_name: do_blast_spa_container
-    command: npm run build
-
-  celery:
-    restart: always
-    build:
-      context: ./e-ticket-service
-    command: celery -A do_blast_server worker -l INFO
-    volumes:
-      - ./e-ticket-service:/django
-      - django_media:/django/media
-    container_name: celery_container
-    depends_on:
-      - database
-      - redis
-      - django
+      - spa_build:/react/dist/web
+    image: react:stokse_client_build
+    container_name: stokse_client_build
 
 volumes:
   spa_build:
   django_media:
   django_static:
+  stokse_db:
