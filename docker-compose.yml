@@ -18,6 +18,7 @@ services:
     ports:
       - 80:80
       - 8000:8000
+      - 443:443
     volumes:
       - django_static:/var/www/django_static
       - django_media:/var/www/django_media
