@@ -25,6 +25,7 @@ services:
       - spa_build:/var/www/react
       - ./nginx/nginx-api-setup.conf:/etc/nginx/conf.d/api.conf
       - ./nginx/nginx-web-setup.conf:/etc/nginx/conf.d/web.conf
+      - /etc/letsencrypt:/etc/letsencrypt
     depends_on:
       - django
       - react
