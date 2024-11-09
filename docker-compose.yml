@@ -13,8 +13,8 @@ services:
       context: ./stokse-server
     volumes:
       - ./stokse-server:/django
-      - django_static:/django/static
-      - django_media:/django/media
+      - /var/www/django_static:/django/static
+      - /var/www/django_media:/django/media
     ports:
       - "8000:8000"
     image: django:stokse_server_api
@@ -26,14 +26,10 @@ services:
     build:
       context: ./stokse-client
     volumes:
-      - spa_build:/react/dist/web
-    ports:
-      - "3000:3000"
+      - /var/www/stokse_client:/react/dist/web
+
     image: react:stokse_client_build
     container_name: stokse_client_build
 
 volumes:
-  spa_build:
-  django_media:
-  django_static:
   stokse_db:
