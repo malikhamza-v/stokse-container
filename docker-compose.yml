@@ -25,11 +25,12 @@ services:
   react:
     build:
       context: ./stokse-client
-    volumes:
-      - /var/www/stokse_client:/react/dist/web
 
     image: react:stokse_client_build
     container_name: stokse_client_build
+    command: npm run build:web --no-cache
+    volumes:
+      - /var/www/stokse_client:/react/dist/web
 
 volumes:
   stokse_db:
