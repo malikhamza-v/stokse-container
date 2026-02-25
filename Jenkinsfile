@@ -4,13 +4,22 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', 
-                    url: 'git@github.com:malikhamza-v/stokse-container.git', 
-                    credentialsId: 'git-ssh-key',
-                    extensions: [[$class: 'SubmoduleOption', 
-                                  disableSubmodules: false, 
-                                  parentCredentials: true, 
-                                  recursiveSubmodules: true]]
+                checkout([
+                    $class: 'GitSCM', 
+                    branches: [[name: '*/main']], 
+                    userRemoteConfigs: [[
+                        url: 'git@github.com:malikhamza-v/stokse-container.git', 
+                        credentialsId: 'git-ssh-key'
+                    ]], 
+                    extensions: [[
+                        $class: 'SubmoduleOption', 
+                        disableSubmodules: false, 
+                        parentCredentials: true, 
+                        recursiveSubmodules: true, 
+                        reference: '', 
+                        trackingSubmodules: false
+                    ]]
+                ])
             }
         }
 
