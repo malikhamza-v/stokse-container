@@ -6,7 +6,11 @@ pipeline {
             steps {
                 git branch: 'main', 
                     url: 'git@github.com:malikhamza-v/stokse-container.git', 
-                    credentialsId: 'git-ssh-key'
+                    credentialsId: 'git-ssh-key',
+                    extensions: [[$class: 'SubmoduleOption', 
+                                  disableSubmodules: false, 
+                                  parentCredentials: true, 
+                                  recursiveSubmodules: true]]
             }
         }
 
