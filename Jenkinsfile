@@ -22,7 +22,7 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'stokse-db-variable-env', variable: 'ENV_FILE')]) {
                     script {
-                        def envContent = readFile(env: ENV_FILE)
+                        def envContent = readFile(file: ENV_FILE)
                         writeFile file: 'db_variables.env', text: envContent
                     }
                 }
