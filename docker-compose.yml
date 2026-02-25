@@ -6,11 +6,13 @@ services:
     env_file:
       - db_variables.env
     volumes:
-      - stokse_db:/var/lib/postgresql/data
+      - stokse_db:/var/lib/postgresql
 
   django:
     build:
       context: ./stokse-server
+    env_file:
+      - ./stokse-server/.env
     volumes:
       - ./stokse-server:/django
       - /var/www/django_static:/django/static
