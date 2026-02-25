@@ -20,10 +20,11 @@ pipeline {
 
         stage('Create Env File') {
             steps {
-                script {
-                    def tempFile = credentials('stokse-db-variable-env')
-                    def envContent = readFile(tempFile).trim()
-                    writeFile file: 'db_variables.env', text: envContent
+                withCredentials([file(credentialsId: 'stokse-db-variable-env', variable: 'ENV_FILE')]) {
+                    script {
+                        def envContent = readFile(env: ENV_FILE)
+                        writeFile file: 'db_variables.env', text: envContent
+                    }
                 }
             }
         }
