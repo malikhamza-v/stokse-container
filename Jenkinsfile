@@ -39,6 +39,12 @@ pipeline {
                         writeFile file: 'db_variables.env', text: envContent
                     }
                 }
+                withCredentials([file(credentialsId: 'stokse-server-env', variable: 'ENV_FILE')]) {                                                                                              
+                 script {                                                                                                                                                                     
+                     def envContent = readFile(file: ENV_FILE)                                                                                                                                
+                     writeFile file: 'stokse-server/.env', text: envContent                                                                                                                   
+                }                                                                                                                                                                            
+             } 
             }
         }
 
