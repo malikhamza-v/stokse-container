@@ -18,6 +18,16 @@ pipeline {
              }
         }
 
+        stage('Create Env File') {
+            steps {
+                script {
+                    def envContent = credentials('stokse-db-variable-env')
+                    def envContent = readFile(tempFile).trim()
+                    writeFile file: 'db_variables.env', text: envContent
+                }
+            }
+        }
+
         stage('Deploy with Docker Compose') {
             steps {
                 script {
