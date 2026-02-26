@@ -2,6 +2,5 @@ db-bak
 server-media-back
 *.crt
 *.key
-*.conf
 
 db_variables.env
