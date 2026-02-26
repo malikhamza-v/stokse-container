@@ -14,7 +14,6 @@ services:
     env_file:
       - ./stokse-server/.env
     volumes:
-      - ./stokse-server:/django
       - /var/www/django_static:/django/static
       - /var/www/django_media:/django/media
     ports:
