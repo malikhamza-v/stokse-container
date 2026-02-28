@@ -40,11 +40,17 @@ pipeline {
                     }
                 }
                 withCredentials([file(credentialsId: 'stokse-server-env', variable: 'ENV_FILE')]) {                                                                                              
-                 script {                                                                                                                                                                     
-                     def envContent = readFile(file: ENV_FILE)                                                                                                                                
-                     writeFile file: 'stokse-server/.env', text: envContent                                                                                                                   
-                }                                                                                                                                                                            
-             } 
+                    script {                                                                                                                                                                     
+                        def envContent = readFile(file: ENV_FILE)                                                                                                                                
+                        writeFile file: 'stokse-server/.env', text: envContent                                                                                                                   
+                    }                                                                                                                                                                            
+                }
+                withCredentials([file(credentialsId: 'stokse-client-env', variable: 'ENV_FILE')]) {                                                                                              
+                    script {                                                                                                                                                                     
+                        def envContent = readFile(file: ENV_FILE)                                                                                                                                
+                        writeFile file: 'stokse-client/.env', text: envContent                                                                                                                   
+                    }                                                                                                                                                                            
+                } 
             }
         }
 
